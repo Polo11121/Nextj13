@@ -1,95 +1,56 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+import { Cuisine, PRICE, PrismaClient, Location, Review } from "@prisma/client";
+import { Header, RestaurantCard } from "@/homePage/components";
+import { Metadata } from "next";
 
-export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+export interface RestaurantCardType {
+  id: number;
+  name: string;
+  main_image: string;
+  slug: string;
+  price: PRICE;
+  cuisine: Cuisine;
+  location: Location;
+  reviews: Review[];
 }
+
+export const metadata: Metadata = {
+  title: "Booking App",
+  description: "Booking App for restaurants table reservation",
+};
+
+const prisma = new PrismaClient();
+
+const fetchRestaurants = (): Promise<RestaurantCardType[]> =>
+  prisma.restaurant.findMany({
+    select: {
+      id: true,
+      name: true,
+      main_image: true,
+      slug: true,
+      cuisine: true,
+      location: true,
+      price: true,
+      reviews: true,
+    },
+  });
+
+export const HomePage = async () => {
+  const restaurants = await fetchRestaurants();
+
+  return (
+    <>
+      <Header />
+      <div className="py-3 px-36 mt-10 flex flex-wrap justify-center">
+        {restaurants.length ? (
+          restaurants.map((restaurant) => (
+            <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+          ))
+        ) : (
+          <div className="text-center text-2xl">No restaurants found</div>
+        )}
+      </div>
+    </>
+  );
+};
+
+export default HomePage;
