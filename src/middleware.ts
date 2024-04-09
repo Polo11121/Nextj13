@@ -1,5 +1,4 @@
 import * as jose from "jose";
-import jwt from "jsonwebtoken";
 
 import { NextRequest, NextResponse } from "next/server";
 
@@ -19,8 +18,9 @@ export const middleware = async (request: NextRequest) => {
 
   const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
+  let payload;
   try {
-    await jose.jwtVerify(token, secret);
+    payload = (await jose.jwtVerify(token, secret)).payload;
   } catch (err) {
     return NextResponse.json(
       {
@@ -32,7 +32,7 @@ export const middleware = async (request: NextRequest) => {
     );
   }
 
-  const { email } = jwt.decode(token) as {
+  const { email } = payload as {
     email: string;
   };
 

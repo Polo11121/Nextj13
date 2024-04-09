@@ -34,7 +34,7 @@ const fetchRestaurants = (): Promise<RestaurantCardType[]> =>
     },
   });
 
-export const HomePage = async () => {
+const HomePage = async () => {
   const restaurants = await fetchRestaurants();
 
   return (

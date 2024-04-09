@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 
 export const POST = async (request: NextRequest) => {
   const token = request.cookies.get("jwt")?.value as string;
+  const secretKey = new TextEncoder().encode(process.env.JWT_SECRET_KEY);
+  const { payload } = await jwtVerify(token, secretKey);
 
-  const { email } = jwt.decode(token) as {
-    email: string;
-  };
+  const { email } = payload as { email: string };
 
   const prisma = new PrismaClient();
 
