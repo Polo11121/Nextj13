@@ -60,7 +60,7 @@ export const AuthProvider = ({
       }
 
       const response = await axios.post(
-        "http://localhost:3000/api/auth/me",
+        "api/auth/me",
         {},
         {
           headers: {

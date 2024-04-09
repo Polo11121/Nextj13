@@ -31,7 +31,7 @@ export const useReservation = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/restaurant/${name}/reserve`,
+        `api/restaurant/${name}/reserve`,
         body,
         {
           params: {

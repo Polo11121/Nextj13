@@ -14,13 +14,10 @@ export const useAuth = () => {
     setAuthState({ data: null, error: null, isLoading: true });
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/auth/signin",
-        {
-          email,
-          password,
-        }
-      );
+      const response = await axios.post("api/auth/signin", {
+        email,
+        password,
+      });
 
       setAuthState({ data: response.data, error: null, isLoading: false });
       closeModal();
@@ -52,17 +49,14 @@ export const useAuth = () => {
   }) => {
     setAuthState({ data: null, error: null, isLoading: true });
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/auth/signup",
-        {
-          email,
-          password,
-          firstName,
-          lastName,
-          city,
-          phone,
-        }
-      );
+      const response = await axios.post("api/auth/signup", {
+        email,
+        password,
+        firstName,
+        lastName,
+        city,
+        phone,
+      });
 
       setAuthState({ data: response.data, error: null, isLoading: false });
       closeModal();
@@ -76,7 +70,7 @@ export const useAuth = () => {
   };
 
   const logout = async () => {
-    await axios.post("http://localhost:3000/api/auth/logout", {});
+    await axios.post("api/auth/logout", {});
 
     setAuthState({ data: null, error: null, isLoading: false });
   };

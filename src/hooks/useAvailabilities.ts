@@ -23,16 +23,13 @@ export const useAvailabilities = () => {
     setLoading(true);
 
     try {
-      const response = await axios.get(
-        `http://localhost:3000/api/restaurant/${name}/availability`,
-        {
-          params: {
-            day,
-            time,
-            partySize,
-          },
-        }
-      );
+      const response = await axios.get(`api/restaurant/${name}/availability`, {
+        params: {
+          day,
+          time,
+          partySize,
+        },
+      });
 
       setLoading(false);
       setData(response.data);
